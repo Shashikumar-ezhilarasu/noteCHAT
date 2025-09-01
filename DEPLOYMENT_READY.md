@@ -3,14 +3,16 @@
 ## ✅ What's Been Set Up
 
 ### 🔥 Firebase Integration
-- **Project**: `notechat-26c38` 
+
+- **Project**: `notechat-26c38`
 - **Storage**: `notechat-26c38.firebasestorage.app`
 - **Frontend Config**: Ready with your Firebase web config
 - **Backend Config**: Updated to use your storage bucket
 
 ### 📚 Your Documents Ready for Upload
+
 - **Hierarchical clustering.pdf** (4.8MB)
-- **HMM.docx** (15KB) 
+- **HMM.docx** (15KB)
 - **K-means clustering with problems.pdf** (3.2MB)
 - **Link Notes.docx** (6KB)
 - **Problems of K means clustering.pdf** (2.9MB)
@@ -24,6 +26,7 @@
 ## 🚀 Next Steps
 
 ### 1. Get Firebase Service Account Credentials
+
 ```bash
 # Go to Firebase Console
 open https://console.firebase.google.com/project/notechat-26c38/settings/serviceaccounts/adminsdk
@@ -33,6 +36,7 @@ open https://console.firebase.google.com/project/notechat-26c38/settings/service
 ```
 
 ### 2. Upload Documents & Start System
+
 ```bash
 # One command to do everything:
 ./upload_and_start.sh
@@ -44,6 +48,7 @@ open https://console.firebase.google.com/project/notechat-26c38/settings/service
 ```
 
 ### 3. Alternative Setup
+
 ```bash
 # Step by step:
 ./setup_with_firebase.sh          # Initial setup
@@ -54,6 +59,7 @@ cd backend && python3 upload_documents.py  # Upload docs
 ## 🎯 What You Can Ask
 
 Once running, you can ask questions like:
+
 - **"What is K-means clustering?"**
 - **"Explain hierarchical clustering algorithms"**
 - **"How do Hidden Markov Models work?"**
@@ -61,6 +67,7 @@ Once running, you can ask questions like:
 - **"Difference between supervised and unsupervised learning"**
 
 ## 📁 Project Structure
+
 ```
 AI Notebook Assistant/
 ├── NOTES/                    # 📚 Your ML documents (9 files)
@@ -75,6 +82,7 @@ AI Notebook Assistant/
 ```
 
 ## 🔧 Features
+
 - ✅ **Firebase Storage**: Cloud document storage
 - ✅ **Smart Search**: Finds relevant content from your documents
 - ✅ **Local Fallback**: Works without Firebase for testing

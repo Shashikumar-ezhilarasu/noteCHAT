@@ -9,6 +9,7 @@ This project presents an intelligent document assistant system that leverages ad
 ## 1. Scope and Motivation
 
 ### 1.1 Scope
+
 - Development of an intelligent document query system for educational content
 - Implementation of advanced RAG pipeline with semantic understanding
 - Integration of modern web technologies for scalable deployment
@@ -16,6 +17,7 @@ This project presents an intelligent document assistant system that leverages ad
 - Real-time query processing with confidence scoring
 
 ### 1.2 Motivation
+
 - **Educational Challenge:** Students often struggle to find specific information across multiple machine learning documents
 - **Information Overload:** Traditional search methods fail to provide contextual understanding
 - **Accessibility:** Need for 24/7 intelligent assistance for academic queries
@@ -29,6 +31,7 @@ The exponential growth of educational content in machine learning and artificial
 This project introduces **noteCHAT**, an AI-powered notebook assistant that transforms how users interact with educational documents. By implementing a sophisticated RAG (Retrieval-Augmented Generation) pipeline, the system provides intelligent, context-aware responses to user queries while maintaining transparency through confidence scoring and source attribution.
 
 The system addresses key limitations of existing solutions by:
+
 - Implementing semantic chunking for better context preservation
 - Providing confidence-based answer ranking
 - Supporting multiple document formats with enhanced text extraction
@@ -36,28 +39,30 @@ The system addresses key limitations of existing solutions by:
 
 ## 3. Literature Survey
 
-| Reference | Authors | Year | Methodology | Advantages | Limitations |
-|-----------|---------|------|-------------|------------|-------------|
-| [1] | Brown et al. | 2020 | GPT-3 for document QA | Large-scale language understanding | No source attribution, hallucination issues |
-| [2] | Karpukhin et al. | 2020 | Dense Passage Retrieval | Better semantic retrieval than BM25 | Requires large training datasets |
-| [3] | Lewis et al. | 2020 | RAG with BART | Combines retrieval with generation | Limited to specific domains |
-| [4] | Izacard & Grave | 2021 | FiD (Fusion-in-Decoder) | Improved multi-passage reasoning | High computational requirements |
-| [5] | Guu et al. | 2020 | REALM | End-to-end retrieval-augmented LM | Complex training procedure |
-| [6] | Wang et al. | 2021 | SimCSE for embeddings | Better sentence representations | Domain-specific fine-tuning needed |
-| [7] | Khattab & Zaharia | 2020 | ColBERT retrieval | Efficient late interaction | Memory intensive |
-| [8] | Xiong et al. | 2021 | Approximate nearest neighbor | Fast similarity search | Accuracy-speed trade-offs |
-| [9] | Thakur et al. | 2021 | BEIR benchmark | Comprehensive retrieval evaluation | Limited real-world scenarios |
-| [10] | Santhanam et al. | 2022 | ColBERTv2 | Improved efficiency | Still requires significant resources |
+| Reference | Authors           | Year | Methodology                  | Advantages                          | Limitations                                 |
+| --------- | ----------------- | ---- | ---------------------------- | ----------------------------------- | ------------------------------------------- |
+| [1]       | Brown et al.      | 2020 | GPT-3 for document QA        | Large-scale language understanding  | No source attribution, hallucination issues |
+| [2]       | Karpukhin et al.  | 2020 | Dense Passage Retrieval      | Better semantic retrieval than BM25 | Requires large training datasets            |
+| [3]       | Lewis et al.      | 2020 | RAG with BART                | Combines retrieval with generation  | Limited to specific domains                 |
+| [4]       | Izacard & Grave   | 2021 | FiD (Fusion-in-Decoder)      | Improved multi-passage reasoning    | High computational requirements             |
+| [5]       | Guu et al.        | 2020 | REALM                        | End-to-end retrieval-augmented LM   | Complex training procedure                  |
+| [6]       | Wang et al.       | 2021 | SimCSE for embeddings        | Better sentence representations     | Domain-specific fine-tuning needed          |
+| [7]       | Khattab & Zaharia | 2020 | ColBERT retrieval            | Efficient late interaction          | Memory intensive                            |
+| [8]       | Xiong et al.      | 2021 | Approximate nearest neighbor | Fast similarity search              | Accuracy-speed trade-offs                   |
+| [9]       | Thakur et al.     | 2021 | BEIR benchmark               | Comprehensive retrieval evaluation  | Limited real-world scenarios                |
+| [10]      | Santhanam et al.  | 2022 | ColBERTv2                    | Improved efficiency                 | Still requires significant resources        |
 
 ## 4. Objective
 
 ### 4.1 Primary Objectives
+
 1. **Develop an intelligent document assistant** capable of understanding and responding to complex queries about machine learning concepts
 2. **Implement advanced RAG techniques** for improved answer quality and relevance
 3. **Create a user-friendly interface** that provides transparent confidence scoring and source attribution
 4. **Ensure scalable architecture** supporting multiple document types and real-time processing
 
 ### 4.2 Secondary Objectives
+
 1. Optimize document processing pipeline for various file formats
 2. Implement robust error handling and fallback mechanisms
 3. Provide comprehensive logging and monitoring capabilities
@@ -79,7 +84,9 @@ Educational institutions and learners face significant challenges in efficiently
 ## 6. Proposed Work
 
 ### 6.1 System Overview
+
 The proposed system implements a multi-stage RAG pipeline that combines:
+
 - **Advanced Document Processing:** Enhanced text extraction with semantic chunking
 - **Intelligent Indexing:** TF-IDF vectorization with optimized parameters
 - **Semantic Retrieval:** Cosine similarity-based chunk ranking
@@ -87,6 +94,7 @@ The proposed system implements a multi-stage RAG pipeline that combines:
 - **Transparent Attribution:** Detailed source references with page numbers
 
 ### 6.2 Key Innovations
+
 1. **Semantic Chunking Strategy:** Overlap-based chunking preserves context across boundaries
 2. **Multi-format Processing:** Unified pipeline handling PDF and DOCX with format-specific optimizations
 3. **Confidence-based Ranking:** Transparent reliability scoring for user trust
@@ -160,21 +168,25 @@ The proposed system implements a multi-stage RAG pipeline that combines:
 ## 8. Novel Ideas
 
 ### 8.1 Adaptive Confidence Thresholding
+
 - Dynamic adjustment of similarity thresholds based on query complexity
 - Multi-tier confidence scoring (High: >0.7, Medium: 0.4-0.7, Low: <0.4)
 - Contextual confidence boosting for domain-specific terms
 
 ### 8.2 Intelligent Chunk Overlap Strategy
+
 - Semantic boundary detection for optimal chunk splitting
 - Context-preserving overlap with weighted similarity scoring
 - Dynamic chunk size adaptation based on document structure
 
 ### 8.3 Multi-Source Answer Synthesis
+
 - Intelligent aggregation of information from multiple document sources
 - Conflict resolution for contradictory information
 - Source reliability weighting based on document metadata
 
 ### 8.4 Real-time Performance Optimization
+
 - Lazy loading of vector indices for memory efficiency
 - Caching strategies for frequently accessed chunks
 - Progressive answer refinement for improved user experience
@@ -182,36 +194,42 @@ The proposed system implements a multi-stage RAG pipeline that combines:
 ## 9. Modules
 
 ### 9.1 Document Processing Module
+
 - **PDF Text Extraction:** PyPDF2-based extraction with error handling
 - **DOCX Processing:** python-docx integration with structure preservation
 - **Text Cleaning:** Advanced regex-based cleaning and normalization
 - **Format Detection:** Automatic file type identification and routing
 
 ### 9.2 Semantic Chunking Module
+
 - **Sentence Tokenization:** NLTK-based intelligent sentence boundary detection
 - **Overlap Management:** Context-preserving chunk boundaries
 - **Keyword Extraction:** Domain-specific term identification
 - **Chunk Indexing:** Unique identifier assignment and metadata tracking
 
 ### 9.3 Vector Search Module
+
 - **TF-IDF Vectorization:** Optimized parameters for educational content
 - **Similarity Calculation:** Cosine similarity with normalized scoring
 - **Index Management:** Efficient storage and retrieval mechanisms
 - **Query Processing:** Real-time query vectorization and matching
 
 ### 9.4 Answer Generation Module
+
 - **Source Attribution:** Detailed reference tracking with page numbers
 - **Confidence Scoring:** Transparent reliability metrics
 - **Response Formatting:** Structured answer presentation
 - **Quality Assurance:** Answer validation and filtering
 
 ### 9.5 API Interface Module
+
 - **FastAPI Backend:** RESTful API with automatic documentation
 - **CORS Handling:** Cross-origin request management
 - **Error Handling:** Comprehensive exception management
 - **Request Validation:** Input sanitization and validation
 
 ### 9.6 Frontend Interface Module
+
 - **Next.js Framework:** Server-side rendering for optimal performance
 - **Responsive Design:** Mobile-first UI/UX approach
 - **Real-time Updates:** Dynamic content rendering
@@ -220,28 +238,34 @@ The proposed system implements a multi-stage RAG pipeline that combines:
 ## 10. Module Description
 
 ### 10.1 Document Processing Module (document_processor.py)
+
 **Purpose:** Extract and preprocess text from various document formats
 **Input:** File paths (PDF, DOCX)
 **Output:** Structured text data with metadata
 **Key Functions:**
+
 - `extract_text_from_pdf()`: PDF text extraction with page tracking
 - `extract_text_from_docx()`: DOCX processing with section identification
 - `_clean_text()`: Text normalization and cleaning
 
 ### 10.2 RAG Pipeline Module (robust_rag.py)
+
 **Purpose:** Core intelligence engine for document understanding
 **Input:** Processed documents and user queries
 **Output:** Contextual answers with confidence scores
 **Key Functions:**
+
 - `initialize()`: System initialization and index building
 - `query()`: Main query processing pipeline
 - `find_relevant_chunks()`: Semantic similarity search
 
 ### 10.3 API Gateway Module (main.py)
+
 **Purpose:** HTTP interface for client-server communication
 **Input:** HTTP requests with queries
 **Output:** JSON responses with answers and metadata
 **Key Functions:**
+
 - `query_documents()`: Main query endpoint
 - `health_check()`: System status monitoring
 - `list_documents()`: Available document inventory
@@ -261,33 +285,33 @@ OUTPUT: Answer with confidence score and sources
        text_data ← extract_text(d)
        chunks ← create_semantic_chunks(text_data)
        ADD chunks to global_chunks
-   
+
    vectors ← TF_IDF_vectorize(global_chunks)
    index ← build_search_index(vectors)
 
 2. QUERY PROCESSING PHASE
    query_vector ← vectorize(Q)
    similarities ← cosine_similarity(query_vector, index)
-   
+
    relevant_chunks ← []
    FOR each similarity score s in similarities:
        IF s > confidence_threshold:
            ADD (chunk, score) to relevant_chunks
-   
+
    SORT relevant_chunks by score DESC
 
 3. ANSWER GENERATION PHASE
    sources ← group_by_source(relevant_chunks)
    answer_parts ← []
-   
+
    FOR each source in sources:
        best_chunk ← highest_scored_chunk(source)
        formatted_answer ← format_with_attribution(best_chunk)
        ADD formatted_answer to answer_parts
-   
+
    confidence ← calculate_average_confidence(relevant_chunks)
    final_answer ← concatenate(answer_parts)
-   
+
    RETURN {
        answer: final_answer,
        confidence: confidence,
@@ -298,14 +322,14 @@ SUBROUTINE: create_semantic_chunks(text_data)
    sentences ← tokenize_sentences(text_data)
    chunks ← []
    current_chunk ← []
-   
+
    FOR each sentence s in sentences:
        ADD s to current_chunk
        IF length(current_chunk) > target_length:
            chunk ← create_chunk(current_chunk)
            ADD chunk to chunks
            current_chunk ← overlap_sentences(current_chunk)
-   
+
    RETURN chunks
 ```
 
@@ -320,7 +344,7 @@ OUTPUT: Normalized confidence score [0, 1]
 1. BASE_SCORE ← cosine_similarity(query, chunk)
 
 2. SOURCE_WEIGHT ← calculate_source_reliability(chunk.source)
-   
+
 3. LENGTH_FACTOR ← min(1.0, chunk.length / optimal_length)
 
 4. KEYWORD_BOOST ← count_domain_keywords(chunk) * 0.1
@@ -337,6 +361,7 @@ OUTPUT: Normalized confidence score [0, 1]
 ### 12.1 Software Requirements
 
 #### Backend Technologies
+
 - **Python 3.12+**
 - **FastAPI 0.104+** - Web framework for API development
 - **PyPDF2 3.0+** - PDF text extraction
@@ -347,6 +372,7 @@ OUTPUT: Normalized confidence score [0, 1]
 - **Firebase Admin SDK** - Cloud storage integration
 
 #### Frontend Technologies
+
 - **Node.js 18+**
 - **Next.js 14+** - React framework
 - **React 18+** - Frontend library
@@ -354,6 +380,7 @@ OUTPUT: Normalized confidence score [0, 1]
 - **Axios** - HTTP client for API communication
 
 #### Development Tools
+
 - **VS Code** - Integrated development environment
 - **Git** - Version control system
 - **npm/pip** - Package managers
@@ -362,12 +389,14 @@ OUTPUT: Normalized confidence score [0, 1]
 ### 12.2 Hardware Requirements
 
 #### Minimum Requirements
+
 - **CPU:** Intel i5 or AMD Ryzen 5 (4 cores)
 - **RAM:** 8 GB
 - **Storage:** 5 GB free space
 - **Network:** Stable internet connection (10 Mbps)
 
 #### Recommended Requirements
+
 - **CPU:** Intel i7 or AMD Ryzen 7 (8 cores)
 - **RAM:** 16 GB
 - **Storage:** 20 GB SSD
@@ -375,6 +404,7 @@ OUTPUT: Normalized confidence score [0, 1]
 - **GPU:** Optional for enhanced processing
 
 #### Production Environment
+
 - **Cloud Platform:** Firebase, AWS, or Google Cloud
 - **Container Support:** Docker compatibility
 - **Load Balancing:** Support for horizontal scaling
@@ -457,6 +487,7 @@ curl -X POST "http://localhost:8000/query" \
 ### 13.5 Frontend Interface Demo
 
 The web interface provides:
+
 - **Query Input:** Natural language question input
 - **Confidence Display:** Visual confidence meter (85% confidence)
 - **Source Attribution:** Clickable source references
@@ -488,15 +519,15 @@ System Metrics:
 
 ### 14.1 Performance Comparison
 
-| Metric | Traditional Search | Basic RAG | Our System (noteCHAT) |
-|--------|-------------------|-----------|----------------------|
-| **Answer Relevance** | 45% | 72% | **87%** |
-| **Source Attribution** | ❌ No | ⚠️ Basic | ✅ Detailed |
-| **Confidence Scoring** | ❌ No | ❌ No | ✅ Yes |
-| **Response Time** | 0.3s | 2.1s | **0.8s** |
-| **Multi-format Support** | ⚠️ Limited | ⚠️ Limited | ✅ Comprehensive |
-| **Context Preservation** | ❌ Poor | ⚠️ Moderate | ✅ Excellent |
-| **Scalability** | ⚠️ Moderate | ❌ Poor | ✅ High |
+| Metric                   | Traditional Search | Basic RAG   | Our System (noteCHAT) |
+| ------------------------ | ------------------ | ----------- | --------------------- |
+| **Answer Relevance**     | 45%                | 72%         | **87%**               |
+| **Source Attribution**   | ❌ No              | ⚠️ Basic    | ✅ Detailed           |
+| **Confidence Scoring**   | ❌ No              | ❌ No       | ✅ Yes                |
+| **Response Time**        | 0.3s               | 2.1s        | **0.8s**              |
+| **Multi-format Support** | ⚠️ Limited         | ⚠️ Limited  | ✅ Comprehensive      |
+| **Context Preservation** | ❌ Poor            | ⚠️ Moderate | ✅ Excellent          |
+| **Scalability**          | ⚠️ Moderate        | ❌ Poor     | ✅ High               |
 
 ### 14.2 Accuracy Analysis
 
@@ -526,14 +557,14 @@ Mathematical Concepts:
 
 ### 14.3 User Satisfaction Metrics
 
-| Aspect | Rating (1-10) | User Feedback |
-|--------|---------------|---------------|
-| **Answer Quality** | 8.7 | "Comprehensive and accurate responses" |
-| **Source Transparency** | 9.2 | "Love seeing exactly where answers come from" |
-| **Confidence Scores** | 8.9 | "Helps me trust the system more" |
-| **Response Speed** | 8.5 | "Fast enough for real-time use" |
-| **Interface Design** | 8.8 | "Clean and intuitive" |
-| **Overall Experience** | 8.8 | "Significantly better than Google search for ML topics" |
+| Aspect                  | Rating (1-10) | User Feedback                                           |
+| ----------------------- | ------------- | ------------------------------------------------------- |
+| **Answer Quality**      | 8.7           | "Comprehensive and accurate responses"                  |
+| **Source Transparency** | 9.2           | "Love seeing exactly where answers come from"           |
+| **Confidence Scores**   | 8.9           | "Helps me trust the system more"                        |
+| **Response Speed**      | 8.5           | "Fast enough for real-time use"                         |
+| **Interface Design**    | 8.8           | "Clean and intuitive"                                   |
+| **Overall Experience**  | 8.8           | "Significantly better than Google search for ML topics" |
 
 ### 14.4 Technical Performance Analysis
 
@@ -559,21 +590,25 @@ Query Complexity Analysis:
 ### 14.5 Advantages Over Existing Solutions
 
 1. **Enhanced Transparency:**
+
    - Detailed source attribution with page numbers
    - Confidence scoring for each response
    - Clear indication of information origin
 
 2. **Superior Context Understanding:**
+
    - Semantic chunking preserves context
    - Overlap strategy maintains coherence
    - Domain-specific keyword recognition
 
 3. **Optimized Performance:**
+
    - Sub-second query processing
    - Efficient memory utilization
    - Scalable architecture design
 
 4. **Comprehensive Format Support:**
+
    - Robust PDF text extraction
    - Advanced DOCX structure preservation
    - Unified processing pipeline
@@ -588,28 +623,34 @@ Query Complexity Analysis:
 The AI Notebook Assistant (noteCHAT) project successfully demonstrates the implementation of an advanced RAG-based document intelligence system that significantly outperforms traditional search methods and basic RAG implementations. Key achievements include:
 
 ### 15.1 Technical Accomplishments
+
 - **87% answer relevance** compared to 72% for basic RAG systems
 - **Sub-second response times** with comprehensive source attribution
 - **Robust multi-format support** with optimized processing pipelines
 - **Transparent confidence scoring** enabling user trust and system reliability
 
 ### 15.2 Innovation Contributions
+
 1. **Semantic Chunking Strategy:** Novel approach to context preservation across document boundaries
 2. **Multi-factor Confidence Scoring:** Comprehensive reliability assessment for generated responses
 3. **Adaptive Processing Pipeline:** Format-specific optimizations for enhanced text extraction
 4. **Real-time Performance Optimization:** Efficient algorithms enabling scalable deployment
 
 ### 15.3 Impact and Significance
+
 The system addresses critical gaps in educational technology by providing:
+
 - **Intelligent Document Understanding:** Beyond simple keyword matching
 - **Transparent Information Retrieval:** Verifiable sources with confidence metrics
 - **Scalable Architecture:** Ready for institutional deployment
 - **User-Centric Design:** Intuitive interface for enhanced learning experience
 
 ### 15.4 Validation Results
+
 Comprehensive testing with 100 diverse queries across machine learning topics demonstrates:
+
 - **89% accuracy** for supervised learning questions
-- **85% accuracy** for unsupervised learning concepts  
+- **85% accuracy** for unsupervised learning concepts
 - **91% accuracy** for algorithm-specific queries
 - **8.8/10 overall user satisfaction** rating
 
@@ -618,12 +659,15 @@ The project successfully proves that advanced RAG techniques combined with seman
 ## 16. Future Work
 
 ### 16.1 Short-term Enhancements (3-6 months)
+
 1. **Advanced Embedding Models:**
+
    - Integration of transformer-based embeddings (BERT, RoBERTa)
    - Domain-specific fine-tuning for machine learning content
    - Multilingual support for international educational content
 
 2. **Enhanced User Interface:**
+
    - Interactive visualizations for concept relationships
    - Query suggestion system based on document content
    - Bookmarking and note-taking capabilities
@@ -634,12 +678,15 @@ The project successfully proves that advanced RAG techniques combined with seman
    - Progressive loading for large document collections
 
 ### 16.2 Medium-term Developments (6-12 months)
+
 1. **Intelligent Tutoring Features:**
+
    - Adaptive questioning based on user knowledge gaps
    - Personalized learning path recommendations
    - Progress tracking and assessment integration
 
 2. **Advanced Document Types:**
+
    - Support for mathematical equations and formulas
    - Image and diagram understanding capabilities
    - Video content transcript processing
@@ -650,12 +697,15 @@ The project successfully proves that advanced RAG techniques combined with seman
    - Expert review and verification system
 
 ### 16.3 Long-term Vision (1-2 years)
+
 1. **AI-Powered Content Generation:**
+
    - Automatic summary generation for document collections
    - Practice question creation based on content analysis
    - Concept map visualization and navigation
 
 2. **Integration Ecosystem:**
+
    - Learning Management System (LMS) integration
    - API for third-party educational tools
    - Mobile application development
@@ -666,12 +716,15 @@ The project successfully proves that advanced RAG techniques combined with seman
    - Predictive modeling for student success
 
 ### 16.4 Research Directions
+
 1. **Explainable AI for Education:**
+
    - Transparent reasoning process visualization
    - Confidence interval analysis and presentation
    - Bias detection and mitigation strategies
 
 2. **Federated Learning Implementation:**
+
    - Privacy-preserving model updates across institutions
    - Collaborative knowledge base enhancement
    - Decentralized document processing
@@ -683,52 +736,54 @@ The project successfully proves that advanced RAG techniques combined with seman
 
 ## 17. References
 
-1. Brown, T., Mann, B., Ryder, N., et al. (2020). "Language Models are Few-Shot Learners." *Advances in Neural Information Processing Systems*, 33, 1877-1901.
+1. Brown, T., Mann, B., Ryder, N., et al. (2020). "Language Models are Few-Shot Learners." _Advances in Neural Information Processing Systems_, 33, 1877-1901.
 
-2. Karpukhin, V., Oguz, B., Min, S., et al. (2020). "Dense Passage Retrieval for Open-Domain Question Answering." *Proceedings of EMNLP 2020*, 6769-6781.
+2. Karpukhin, V., Oguz, B., Min, S., et al. (2020). "Dense Passage Retrieval for Open-Domain Question Answering." _Proceedings of EMNLP 2020_, 6769-6781.
 
-3. Lewis, P., Perez, E., Piktus, A., et al. (2020). "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks." *Advances in Neural Information Processing Systems*, 33, 9459-9474.
+3. Lewis, P., Perez, E., Piktus, A., et al. (2020). "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks." _Advances in Neural Information Processing Systems_, 33, 9459-9474.
 
-4. Izacard, G., & Grave, E. (2021). "Leveraging Passage Retrieval with Generative Models for Open Domain Question Answering." *Proceedings of EACL 2021*, 874-880.
+4. Izacard, G., & Grave, E. (2021). "Leveraging Passage Retrieval with Generative Models for Open Domain Question Answering." _Proceedings of EACL 2021_, 874-880.
 
-5. Guu, K., Lee, K., Tung, Z., et al. (2020). "REALM: Retrieval-Augmented Language Model Pre-Training." *Proceedings of ICML 2020*, 3929-3938.
+5. Guu, K., Lee, K., Tung, Z., et al. (2020). "REALM: Retrieval-Augmented Language Model Pre-Training." _Proceedings of ICML 2020_, 3929-3938.
 
-6. Wang, T., Isola, P., & others (2021). "Understanding Contrastive Representation Learning through Alignment and Uniformity on the Hypersphere." *Proceedings of ICML 2021*, 9929-9939.
+6. Wang, T., Isola, P., & others (2021). "Understanding Contrastive Representation Learning through Alignment and Uniformity on the Hypersphere." _Proceedings of ICML 2021_, 9929-9939.
 
-7. Khattab, O., & Zaharia, M. (2020). "ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT." *Proceedings of SIGIR 2020*, 39-48.
+7. Khattab, O., & Zaharia, M. (2020). "ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT." _Proceedings of SIGIR 2020_, 39-48.
 
-8. Xiong, L., Huang, C., Chakraborty, S., et al. (2021). "Approximate Nearest Neighbor Negative Contrastive Learning for Dense Text Retrieval." *Proceedings of ICLR 2021*.
+8. Xiong, L., Huang, C., Chakraborty, S., et al. (2021). "Approximate Nearest Neighbor Negative Contrastive Learning for Dense Text Retrieval." _Proceedings of ICLR 2021_.
 
-9. Thakur, N., Reimers, N., Rücklé, A., et al. (2021). "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models." *Proceedings of NeurIPS 2021*.
+9. Thakur, N., Reimers, N., Rücklé, A., et al. (2021). "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models." _Proceedings of NeurIPS 2021_.
 
-10. Santhanam, K., Khattab, O., Saad-Falcon, J., et al. (2022). "ColBERTv2: Effective and Efficient Retrieval via Lightweight Late Interaction." *Proceedings of NAACL 2022*, 3715-3734.
+10. Santhanam, K., Khattab, O., Saad-Falcon, J., et al. (2022). "ColBERTv2: Effective and Efficient Retrieval via Lightweight Late Interaction." _Proceedings of NAACL 2022_, 3715-3734.
 
-11. Devlin, J., Chang, M. W., Lee, K., & Toutanova, K. (2019). "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding." *Proceedings of NAACL-HLT 2019*, 4171-4186.
+11. Devlin, J., Chang, M. W., Lee, K., & Toutanova, K. (2019). "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding." _Proceedings of NAACL-HLT 2019_, 4171-4186.
 
-12. Reimers, N., & Gurevych, I. (2019). "Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks." *Proceedings of EMNLP-IJCNLP 2019*, 3982-3992.
+12. Reimers, N., & Gurevych, I. (2019). "Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks." _Proceedings of EMNLP-IJCNLP 2019_, 3982-3992.
 
-13. Johnson, J., Douze, M., & Jégou, H. (2019). "Billion-scale similarity search with GPUs." *IEEE Transactions on Big Data*, 7(3), 535-547.
+13. Johnson, J., Douze, M., & Jégou, H. (2019). "Billion-scale similarity search with GPUs." _IEEE Transactions on Big Data_, 7(3), 535-547.
 
-14. Zhao, W. X., Liu, J., Ren, R., et al. (2022). "Dense Text Retrieval based on Pretrained Language Models: A Survey." *ACM Transactions on Information Systems*, 40(4), 1-60.
+14. Zhao, W. X., Liu, J., Ren, R., et al. (2022). "Dense Text Retrieval based on Pretrained Language Models: A Survey." _ACM Transactions on Information Systems_, 40(4), 1-60.
 
-15. Mitra, B., & Craswell, N. (2018). "An Introduction to Neural Information Retrieval." *Foundations and Trends in Information Retrieval*, 13(1), 1-126.
+15. Mitra, B., & Craswell, N. (2018). "An Introduction to Neural Information Retrieval." _Foundations and Trends in Information Retrieval_, 13(1), 1-126.
 
-16. Qu, Y., Ding, Y., Liu, J., et al. (2021). "RocketQA: An Optimized Training Approach to Dense Passage Retrieval for Open-Domain Question Answering." *Proceedings of NAACL 2021*, 5835-5847.
+16. Qu, Y., Ding, Y., Liu, J., et al. (2021). "RocketQA: An Optimized Training Approach to Dense Passage Retrieval for Open-Domain Question Answering." _Proceedings of NAACL 2021_, 5835-5847.
 
-17. Formal, T., Lassance, C., Piwowarski, B., & Clinchant, S. (2021). "SPLADE v2: Sparse Lexical and Expansion Model for Information Retrieval." *arXiv preprint arXiv:2109.10086*.
+17. Formal, T., Lassance, C., Piwowarski, B., & Clinchant, S. (2021). "SPLADE v2: Sparse Lexical and Expansion Model for Information Retrieval." _arXiv preprint arXiv:2109.10086_.
 
-18. Zhan, J., Mao, J., Liu, Y., et al. (2021). "Optimizing Dense Retrieval Model Training with Hard Negatives." *Proceedings of SIGIR 2021*, 1503-1512.
+18. Zhan, J., Mao, J., Liu, Y., et al. (2021). "Optimizing Dense Retrieval Model Training with Hard Negatives." _Proceedings of SIGIR 2021_, 1503-1512.
 
 ## 18. Outcome
 
 ### 18.1 Paper Submission Status
 
 **Target Conferences/Journals:**
+
 - IEEE International Conference on Artificial Intelligence and Knowledge Engineering (AIKE) 2025
 - ACM Digital Library - Educational Technology & Society
 - International Journal of Artificial Intelligence in Education (IJAIED)
 
 **Preparation Status:**
+
 - [x] Research Completed
 - [x] System Implementation Finished
 - [x] Performance Evaluation Conducted
@@ -740,11 +795,13 @@ The project successfully proves that advanced RAG techniques combined with seman
 **Patent Title:** "Intelligent Document Assistant System with Semantic Retrieval and Confidence Scoring"
 
 **Patent Application Status:**
+
 - [ ] Prior Art Search: In Progress
 - [ ] Provisional Patent Application: Planned (Q3 2025)
 - [ ] Full Patent Application: Planned (Q4 2025)
 
 **Key Innovation Claims:**
+
 1. Semantic chunking method with adaptive overlap for context preservation
 2. Multi-factor confidence scoring algorithm for document retrieval systems
 3. Real-time educational content understanding with source attribution
@@ -753,6 +810,7 @@ The project successfully proves that advanced RAG techniques combined with seman
 ### 18.3 Project Deliverables
 
 **Technical Deliverables:**
+
 - ✅ Functional AI Notebook Assistant (noteCHAT)
 - ✅ Comprehensive RAG Pipeline Implementation
 - ✅ Web-based User Interface
@@ -760,12 +818,14 @@ The project successfully proves that advanced RAG techniques combined with seman
 - ✅ Documentation and User Manual
 
 **Academic Deliverables:**
+
 - ✅ Complete Project Report (This Document)
 - 🔄 Research Paper (In Preparation)
 - 📋 Patent Application (Planned)
 - 📋 Open Source Release (Planned)
 
 **Impact Metrics:**
+
 - System successfully processes 179 document chunks
 - Achieves 87% average answer relevance
 - Demonstrates sub-second query response times
@@ -776,8 +836,8 @@ This comprehensive documentation demonstrates the successful completion of an in
 
 ---
 
-*Document Version: 1.0*  
-*Last Updated: August 4, 2025*  
-*Project: AI Notebook Assistant (noteCHAT)*  
-*Institution: [Your Institution Name]*  
-*Research Team: [Your Name and Team]*
+_Document Version: 1.0_  
+_Last Updated: August 4, 2025_  
+_Project: AI Notebook Assistant (noteCHAT)_  
+_Institution: [Your Institution Name]_  
+_Research Team: [Your Name and Team]_

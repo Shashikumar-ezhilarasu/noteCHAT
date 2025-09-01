@@ -134,7 +134,7 @@ class EnhancedRAGPipeline:
             return []
     
     def extract_text_from_pdf(self, file_path: str) -> str:
-        """Extract text from PDF file"""
+        """Extract text from PDF file with improved spacing"""
         try:
             with open(file_path, 'rb') as file:
                 reader = PyPDF2.PdfReader(file)
@@ -143,7 +143,9 @@ class EnhancedRAGPipeline:
                     try:
                         page_text = page.extract_text()
                         if page_text.strip():
-                            text += f"\n--- Page {page_num + 1} ---\n{page_text}\n"
+                            # Improve spacing for better readability
+                            cleaned_page_text = self.fix_pdf_spacing(page_text)
+                            text += f"\n--- Page {page_num + 1} ---\n{cleaned_page_text}\n"
                     except Exception as e:
                         logger.warning(f"Error extracting page {page_num + 1} from {file_path}: {e}")
                         continue
@@ -183,8 +185,37 @@ class EnhancedRAGPipeline:
             logger.error(f"Error extracting text from {file_path}: {e}")
             return ""
     
+    def fix_pdf_spacing(self, text: str) -> str:
+        """Fix spacing issues common in PDF text extraction"""
+        # Add space before capital letters that follow lowercase letters (camelCase fix)
+        text = re.sub(r'([a-z])([A-Z])', r'\1 \2', text)
+        
+        # Add space between letters and numbers
+        text = re.sub(r'([a-zA-Z])(\d)', r'\1 \2', text)
+        text = re.sub(r'(\d)([a-zA-Z])', r'\1 \2', text)
+        
+        # Add space after periods if not followed by space
+        text = re.sub(r'\.([A-Z])', r'. \1', text)
+        
+        # Add space after commas if not followed by space
+        text = re.sub(r',([a-zA-Z])', r', \1', text)
+        
+        # Add space after colons if not followed by space
+        text = re.sub(r':([a-zA-Z])', r': \1', text)
+        
+        # Fix common OCR issues with spacing
+        text = re.sub(r'([a-z])([A-Z][a-z])', r'\1 \2', text)
+        
+        # Handle specific cases like "performanceusingdifferent" -> "performance using different"
+        text = re.sub(r'([a-z])(using|with|and|or|the|of|in|for|to|from|by)', r'\1 \2', text)
+        
+        return text
+
     def clean_text(self, text: str) -> str:
-        """Clean and normalize text"""
+        """Enhanced text cleaning with better spacing"""
+        # First fix PDF spacing issues
+        text = self.fix_pdf_spacing(text)
+        
         # Remove excessive whitespace and normalize
         text = re.sub(r'\s+', ' ', text)
         text = re.sub(r'\n+', '\n', text)
@@ -196,6 +227,14 @@ class EnhancedRAGPipeline:
         text = text.replace('â€™', "'")
         text = text.replace('â€œ', '"')
         text = text.replace('â€', '"')
+        
+        # Clean up multiple spaces
+        text = re.sub(r'\s+', ' ', text)
+        
+        # Ensure proper sentence spacing
+        text = re.sub(r'\.(\w)', r'. \1', text)
+        text = re.sub(r'\?(\w)', r'? \1', text)
+        text = re.sub(r'!(\w)', r'! \1', text)
         
         return text.strip()
     

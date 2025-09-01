@@ -133,18 +133,83 @@ class RobustRAGPipeline:
             
         return text_data
         
+    def _fix_pdf_spacing(self, text: str) -> str:
+        """Specialized function to fix PDF text extraction spacing issues"""
+        # First pass: identify and fix obvious concatenations
+        
+        # Fix common patterns where words are stuck together
+        # Pattern: lowercase letter followed by uppercase (camelCase)
+        text = re.sub(r'([a-z])([A-Z])', r'\1 \2', text)
+        
+        # Pattern: letter followed by number or number followed by letter
+        text = re.sub(r'(\d)([A-Za-z])', r'\1 \2', text)
+        text = re.sub(r'([A-Za-z])(\d)', r'\1 \2', text)
+        
+        # Fix words stuck together by looking for common English patterns
+        # Insert space before common word endings when preceded by a letter
+        word_endings = ['ing', 'tion', 'sion', 'ment', 'ness', 'able', 'ible', 'ful', 'less', 'ous', 'ive', 'ed', 'er', 'est', 'ly', 'al', 'ic', 'ary', 'ory']
+        for ending in word_endings:
+            pattern = f'([a-z])({ending})([A-Z][a-z])'
+            text = re.sub(pattern, rf'\1\2 \3', text)
+        
+        # Fix concatenated common words
+        common_patterns = [
+            (r'([a-z])(the)([A-Z])', r'\1 \2 \3'),
+            (r'([a-z])(and)([A-Z])', r'\1 \2 \3'),
+            (r'([a-z])(that)([A-Z])', r'\1 \2 \3'),
+            (r'([a-z])(with)([A-Z])', r'\1 \2 \3'),
+            (r'([a-z])(this)([A-Z])', r'\1 \2 \3'),
+            (r'([a-z])(which)([A-Z])', r'\1 \2 \3'),
+            (r'([a-z])(when)([A-Z])', r'\1 \2 \3'),
+            (r'([a-z])(where)([A-Z])', r'\1 \2 \3'),
+            (r'([a-z])(what)([A-Z])', r'\1 \2 \3'),
+            (r'([a-z])(how)([A-Z])', r'\1 \2 \3'),
+            (r'([a-z])(can)([A-Z])', r'\1 \2 \3'),
+            (r'([a-z])(will)([A-Z])', r'\1 \2 \3'),
+            (r'([a-z])(are)([A-Z])', r'\1 \2 \3'),
+            (r'([a-z])(is)([A-Z])', r'\1 \2 \3'),
+            (r'([a-z])(be)([A-Z])', r'\1 \2 \3'),
+            (r'([a-z])(have)([A-Z])', r'\1 \2 \3'),
+            (r'([a-z])(has)([A-Z])', r'\1 \2 \3'),
+            (r'([a-z])(in)([A-Z])', r'\1 \2 \3'),
+            (r'([a-z])(on)([A-Z])', r'\1 \2 \3'),
+            (r'([a-z])(of)([A-Z])', r'\1 \2 \3'),
+            (r'([a-z])(to)([A-Z])', r'\1 \2 \3'),
+            (r'([a-z])(for)([A-Z])', r'\1 \2 \3'),
+            (r'([a-z])(by)([A-Z])', r'\1 \2 \3'),
+            (r'([a-z])(from)([A-Z])', r'\1 \2 \3'),
+            (r'([a-z])(using)([A-Z])', r'\1 \2 \3'),
+        ]
+        
+        for pattern, replacement in common_patterns:
+            text = re.sub(pattern, replacement, text, flags=re.IGNORECASE)
+        
+        # Fix punctuation spacing
+        text = re.sub(r'\.([A-Z])', r'. \1', text)
+        text = re.sub(r',([A-Za-z])', r', \1', text)
+        text = re.sub(r':([A-Za-z])', r': \1', text)
+        text = re.sub(r';([A-Za-z])', r'; \1', text)
+        text = re.sub(r'\!([A-Za-z])', r'! \1', text)
+        text = re.sub(r'\?([A-Za-z])', r'? \1', text)
+        
+        # Handle parentheses spacing
+        text = re.sub(r'\)([A-Za-z])', r') \1', text)
+        text = re.sub(r'([A-Za-z])\(', r'\1 (', text)
+        
+        return text
+
     def _clean_text(self, text: str) -> str:
-        """Advanced text cleaning and formatting"""
+        """Advanced text cleaning and formatting with PDF-specific fixes"""
         # Remove extra whitespace and normalize
         text = re.sub(r'\s+', ' ', text.strip())
         
-        # Fix common OCR issues
-        text = re.sub(r'([a-z])([A-Z])', r'\1 \2', text)  # Split concatenated words
-        text = re.sub(r'(\d+)([A-Za-z])', r'\1 \2', text)  # Space between numbers and letters
-        text = re.sub(r'([A-Za-z])(\d+)', r'\1 \2', text)  # Space between letters and numbers
+        # Apply PDF-specific spacing fixes
+        text = self._fix_pdf_spacing(text)
         
-        # Clean special characters but preserve structure
+        # Remove problematic characters but preserve structure
         text = re.sub(r'[^\w\s\.\,\;\:\!\?\-\(\)]', ' ', text)
+        
+        # Final cleanup
         text = re.sub(r'\s+', ' ', text)
         
         return text.strip()

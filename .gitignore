@@ -151,3 +151,8 @@ build/
 
 # VS Code
 .vscode/
+
+# Project specific
+cache/
+downloads/
+firebase_admin_config.json

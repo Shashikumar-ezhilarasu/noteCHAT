@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import List, Dict, Any, Optional, Tuple
 import re
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from collections import defaultdict
 
 # Document processing
@@ -26,7 +26,7 @@ from nltk.stem import WordNetLemmatizer
 
 # ML and similarity
 import numpy as np
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sentence_transformers import SentenceTransformer, CrossEncoder
 from sklearn.metrics.pairwise import cosine_similarity
 
 @dataclass
@@ -45,13 +45,18 @@ class RobustRAGPipeline:
     def __init__(self):
         self.logger = self._setup_logging()
         self.chunks: List[DocumentChunk] = []
-        self.vectorizer: Optional[TfidfVectorizer] = None
-        self.tfidf_matrix = None
+        self.embedding_model: Optional[SentenceTransformer] = None
+        self.cross_encoder_model: Optional[CrossEncoder] = None
+        self.embedding_matrix = None
         self.lemmatizer = WordNetLemmatizer()
         try:
             self.stop_words = set(stopwords.words('english'))
         except:
             self.stop_words = set()
+        
+        self.cache_dir = Path("cache")
+        self.chunks_cache_path = self.cache_dir / "chunks.json"
+        self.embeddings_cache_path = self.cache_dir / "embeddings.npy"
         
     def _setup_logging(self) -> logging.Logger:
         """Setup enhanced logging"""
@@ -334,32 +339,25 @@ class RobustRAGPipeline:
         return len(self.chunks) > 0
         
     def create_search_index(self) -> bool:
-        """Create search index with optimized parameters"""
+        """Create search index with sentence transformer embeddings"""
         try:
             if not self.chunks:
                 self.logger.error("❌ No chunks to index")
                 return False
             
-            # Prepare texts for vectorization
+            self.logger.info("🧠 Loading sentence transformer model...")
+            # Using a lightweight but powerful model
+            self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+            
+            self.logger.info("🧠 Loading Cross-Encoder model for re-ranking...")
+            self.cross_encoder_model = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
+
+            self.logger.info("🧠 Creating embeddings for all chunks...")
+            # Prepare texts for embedding
             texts = [chunk.content for chunk in self.chunks]
+            self.embedding_matrix = self.embedding_model.encode(texts, show_progress_bar=True)
             
-            # Optimized TF-IDF parameters
-            self.vectorizer = TfidfVectorizer(
-                max_features=1000,  # Reduced for better performance
-                stop_words='english',
-                ngram_range=(1, 2),  # Unigrams and bigrams
-                min_df=1,  # Include rare terms
-                max_df=0.95,  # Exclude very common terms
-                sublinear_tf=True,
-                lowercase=True
-            )
-            
-            self.tfidf_matrix = self.vectorizer.fit_transform(texts)
-            self.logger.info(f"✅ Search index created: {self.tfidf_matrix.shape}")
-            
-            # Log vocabulary sample
-            vocab_sample = list(self.vectorizer.vocabulary_.keys())[:10]
-            self.logger.info(f"📝 Sample vocabulary: {vocab_sample}")
+            self.logger.info(f"✅ Search index created with embeddings: {self.embedding_matrix.shape}")
             
             return True
             
@@ -368,38 +366,49 @@ class RobustRAGPipeline:
             return False
             
     def find_relevant_chunks(self, query: str, top_k: int = 5) -> List[Tuple[DocumentChunk, float]]:
-        """Find most relevant chunks with improved scoring"""
+        """Find most relevant chunks using semantic search and re-ranking"""
         try:
-            if not self.vectorizer or self.tfidf_matrix is None:
-                self.logger.error("❌ Search index not available")
+            if self.embedding_model is None or self.embedding_matrix is None or self.cross_encoder_model is None:
+                self.logger.error("❌ Search index or cross-encoder not available")
                 return []
             
-            self.logger.info(f"🔍 Searching for: {query}")
+            self.logger.info(f"🔍 Stage 1: Initial search for: {query}")
             
-            # Process query
-            query_vector = self.vectorizer.transform([query])
+            # Stage 1: Fast retrieval with sentence transformer
+            query_embedding = self.embedding_model.encode([query])
+            similarities = cosine_similarity(query_embedding, self.embedding_matrix).flatten()
             
-            # Calculate similarities
-            similarities = cosine_similarity(query_vector, self.tfidf_matrix).flatten()
+            # Get a larger pool of candidates for re-ranking
+            candidate_indices = similarities.argsort()[-top_k * 4:][::-1]
             
-            # Log similarity statistics
-            max_sim = np.max(similarities)
-            avg_sim = np.mean(similarities)
-            self.logger.info(f"📊 Similarity stats - Max: {max_sim:.3f}, Avg: {avg_sim:.3f}")
+            # Stage 2: Re-ranking with Cross-Encoder
+            self.logger.info(f"🔍 Stage 2: Re-ranking {len(candidate_indices)} candidates with Cross-Encoder...")
             
-            # Get top matches with lower threshold
-            top_indices = similarities.argsort()[-top_k * 2:][::-1]  # Get more candidates
+            cross_encoder_inputs = [[query, self.chunks[idx].content] for idx in candidate_indices]
+            cross_encoder_scores = self.cross_encoder_model.predict(cross_encoder_inputs)
+
+            # Apply sigmoid to convert scores to a 0-1 confidence range
+            confidence_scores = 1 / (1 + np.exp(-cross_encoder_scores))
             
+            # Combine candidates with their new scores
+            reranked_results = list(zip(candidate_indices, confidence_scores))
+            
+            # Sort by the new confidence scores in descending order
+            reranked_results.sort(key=lambda x: x[1], reverse=True)
+            
+            # Log re-ranking stats
+            max_rerank_score = reranked_results[0][1] if reranked_results else 0
+            self.logger.info(f"📊 Re-ranking stats - Max Score: {max_rerank_score:.3f}")
+
+            # Get top matches after re-ranking
             results = []
-            for idx in top_indices:
-                if similarities[idx] > 0.01:  # Very low threshold
-                    chunk = self.chunks[idx]
-                    chunk.confidence_score = similarities[idx]
-                    results.append((chunk, similarities[idx]))
-                    self.logger.info(f"📋 Match {len(results)}: {similarities[idx]:.3f} - {chunk.content[:50]}...")
+            for idx, score in reranked_results[:top_k]:
+                chunk = self.chunks[idx]
+                chunk.confidence_score = float(score)
+                results.append((chunk, float(score)))
+                self.logger.info(f"📋 Final Match {len(results)}: {score:.3f} - {chunk.content[:50]}...")
             
-            # Return top k results
-            return results[:top_k]
+            return results
             
         except Exception as e:
             self.logger.error(f"❌ Search failed: {e}")
@@ -478,11 +487,66 @@ class RobustRAGPipeline:
                 "sources": [],
                 "confidence": 0.0
             }
+
+    def _save_to_cache(self):
+        """Save the processed chunks and embeddings to disk."""
+        try:
+            self.logger.info(f"💾 Saving knowledge base to cache directory: {self.cache_dir}")
+            self.cache_dir.mkdir(exist_ok=True)
+
+            # Save chunks as JSON
+            with open(self.chunks_cache_path, 'w', encoding='utf-8') as f:
+                json.dump([asdict(chunk) for chunk in self.chunks], f, indent=4)
+
+            # Save embeddings as a numpy file
+            if self.embedding_matrix is not None:
+                np.save(self.embeddings_cache_path, self.embedding_matrix)
+            
+            self.logger.info("✅ Knowledge base saved successfully.")
+        except Exception as e:
+            self.logger.error(f"❌ Failed to save knowledge base to cache: {e}")
+
+    def _load_from_cache(self) -> bool:
+        """Load the processed chunks and embeddings from disk."""
+        try:
+            self.logger.info("🔄 Loading knowledge base from cache...")
+
+            # Load chunks from JSON
+            with open(self.chunks_cache_path, 'r', encoding='utf-8') as f:
+                chunks_data = json.load(f)
+                self.chunks = [DocumentChunk(**data) for data in chunks_data]
+
+            # Load embeddings
+            self.embedding_matrix = np.load(self.embeddings_cache_path)
+            
+            # Load the sentence transformer model
+            self.logger.info("🧠 Loading sentence transformer model...")
+            self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+
+            self.logger.info("🧠 Loading Cross-Encoder model for re-ranking...")
+            self.cross_encoder_model = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
+
+            self.logger.info(f"✅ Knowledge base loaded successfully from cache. {len(self.chunks)} chunks.")
+            return True
+        except Exception as e:
+            self.logger.error(f"❌ Failed to load knowledge base from cache: {e}")
+            return False
             
     def initialize(self) -> bool:
         """Initialize the robust RAG pipeline"""
         try:
             self.logger.info("🚀 Initializing Robust RAG Pipeline...")
+            
+            # Check if cache exists and load from it
+            if self.chunks_cache_path.exists() and self.embeddings_cache_path.exists():
+                if self._load_from_cache():
+                    self.logger.info("🎉 Robust RAG Pipeline initialized successfully from cache!")
+                    return True
+                else:
+                    self.logger.warning("⚠️ Failed to load from cache, rebuilding...")
+
+            # If cache doesn't exist or loading failed, build it
+            self.logger.info("🛠️ Knowledge base not found in cache. Building from scratch...")
             
             # Download documents
             file_paths = self.download_documents_from_local()
@@ -499,6 +563,13 @@ class RobustRAGPipeline:
             if not self.create_search_index():
                 self.logger.error("❌ Search index creation failed")
                 return False
+            
+            # Load the cross-encoder model after building the index
+            self.logger.info("🧠 Loading Cross-Encoder model for re-ranking...")
+            self.cross_encoder_model = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
+
+            # Save the newly built knowledge base to cache
+            self._save_to_cache()
             
             self.logger.info("🎉 Robust RAG Pipeline initialized successfully!")
             return True

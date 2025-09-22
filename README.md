@@ -152,7 +152,7 @@ project/
 - `POST /query`: Submit a question (expects `{"question": "your question"}`)
 - `GET /sources`: List available document sources
 
-## � Upgrade Path
+## 🔄 Upgrade Path
 
 To add advanced features later:
 
@@ -160,6 +160,21 @@ To add advanced features later:
 2. Add vector embeddings: `pip install sentence-transformers chromadb`
 3. Add local LLM: `pip install transformers torch`
 4. Switch to `rag_pipeline.py` in `main.py`
+
+## 📊 RAG Approaches Comparison
+
+Below is a comparison of different RAG (Retrieval-Augmented Generation) approaches implemented in this project:
+
+![RAG Approaches Comparison](./assets/rag_comparison_table.png)
+
+### Confidence Score Evolution
+
+- **Initial TF-IDF**: Simple percentage based on keyword matches (sometimes as low as 27.3%)
+- **Sentence Transformers**: Normalized cosine similarity between embeddings
+- **Cross-Encoder**: Raw scores (could be negative, e.g., -102.4%) now normalized using sigmoid function:
+  ```
+  confidence = 100 * (1 / (1 + exp(-raw_score)))
+  ```
 
 ## 📄 License
 

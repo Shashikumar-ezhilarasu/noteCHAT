@@ -20,12 +20,12 @@ cd ..
 echo "⏳ Waiting for backend to initialize..."
 sleep 5
 
-# Start frontend
-# echo "🌐 Starting frontend..."
-# cd frontend
-# npm run dev &
-# FRONTEND_PID=$!
-# cd ..
+Start frontend
+echo "🌐 Starting frontend..."
+cd frontend
+npm run dev &
+FRONTEND_PID=$!
+cd ..
 
 echo "✅ Both servers started!"
 echo "🔗 Frontend: http://localhost:3000"

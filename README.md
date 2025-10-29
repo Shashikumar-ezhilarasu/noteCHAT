@@ -5,7 +5,7 @@ A full-stack AI assistant that uses Firebase Storage, FastAPI, and Next.js to cr
 ## 🏗️ Architecture
 
 ```
-📂 AI Notebook Assistant
+📂 AI Notebook Assistant 
 ├── 🔧 Backend (FastAPI + Firebase + Simple RAG)
 │   ├── Firebase Storage (documents) - Optional
 │   ├── Simple RAG Pipeline (keyword-based search)
